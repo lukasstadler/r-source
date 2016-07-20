@@ -52,62 +52,62 @@
 static int c__1 = 1;
 static int c__11 = 11;
 
-static void active(int, double *, double *, int *, double *, int *,
-		   int, int *, int *, int *);
-static void bmv(int, double *, double *, int *, double *, double *, int *);
-static void cauchy(int, double *, double *,
-		   double *, int *, double *, int *, int *,
-		   double *, double *, double *, int, double *,
-		   double *, double *, double *, double *, int * ,
-		   int *, double *, double *, double *, double *,
-		   int *, int, double *, int *, double *);
-static void cmprlb(int, int, double *,
-		   double *, double *, double *, double *,
-		   double *, double *, double *, double *, int *,
-		   double *, int *, int *, int *, int *,
-		   int *);
-static void dcsrch(double *, double *, double *,
-		   double, double, double,
-		   double, double, char *);
-static void dcstep(double *, double *,
-		   double *, double *, double *, double *,
-		   double *, double *, double *, int *, double *,
-		   double *);
-static void errclb(int, int, double,
-		   double *, double *, int *, char *, int *, int *);
-static void formk(int, int *, int *, int *, int *, int *, int *,
-		  int *, double *, double *, int, double *,
-		  double *, double *, double *, int *, int *, int *);
-static void formt(int, double *, double *,
-		  double *, int *, double *, int *);
-static void freev(int, int *, int *,
-		  int *, int *, int *, int *, int *, int *,
-		  int *, int, int *);
-static void hpsolb(int, double *, int *, int);
-static void lnsrlb(int, double *, double *,
-		   int *, double *, double *, double *, double *,
-		   double *, double *, double *, double *,
-		   double *, double *, double *, double *,
-		   double *, double *, double *, int *, int *,
-		   int *, int *, int *, char *, int *, int *,
-		   char *);
-static void mainlb(int, int, double *,
-		   double *, double *, int *, double *, double *,
-		   double, double *, double *, double *,
-		   double *, double *, double *, double *,
-		   double *, double *, double *, double *,
-		   double *, double *, int *, int *, int *, char *,
-		   int, char *, int *);
-static void matupd(int, int, double *, double *, double *,
-		   double *, double *, double *, int *, int *,
-		   int *, int *, double *, double *, double *,
-		   double *, double *);
-static void projgr(int, double *, double *,
-		   int *, double *, double *, double *);
-static void subsm(int, int, int *, int *, double *, double *,
-		  int *, double *, double *, double *, double *,
-		  double *, int *, int *, int *, double *,
-		  double *, int, int *);
+static void active(int n, double * l, double * u, int * nbd, double * x, int * iwhere,
+		   int iprint, int * prjctd, int * cnstnd, int * boxed);
+static void bmv(int m, double * sy, double * wt, int * col, double * v, double * p, int * info);
+static void cauchy(int n, double * x, double * l,
+		   double * u, int * nbd, double * g, int * iorder, int * iwhere,
+		   double * t, double * d, double * xcp, int m, double * wy,
+		   double * ws, double * sy, double * wt, double * theta, int *  col,
+		   int * head, double * p, double * c, double * wbp, double * v,
+		   int * nint, int iprint, double * sbgnrm, int * info, double * epsmch);
+static void cmprlb(int n, int m, double * x,
+		   double * g, double * ws, double * wy, double * sy,
+		   double * wt, double * z, double * r, double * wa, int * indx,
+		   double * theta, int * col, int * head, int * nfree, int * cnstnd,
+		   int * info);
+static void dcsrch(double * f, double * g, double * stp,
+		   double ftol, double gtol, double xtol,
+		   double stpmin, double stpmax, char * task);
+static void dcstep(double * stx, double * fx,
+		   double * dx, double * sty, double * fy, double * dy,
+		   double * stp, double * fp, double * dp, int * brackt, double * stpmin,
+		   double * stpmax);
+static void errclb(int n, int m, double factr,
+		   double * l, double * u, int * nbd, char * task, int * info, int * k);
+static void formk(int n, int * nsub, int * ind, int * nenter, int * ileave, int * indx2, int * iupdat,
+		  int * updatd, double * wn, double * wn1, int m, double * ws,
+		  double * wy, double * sy, double * theta, int * col, int * head, int * info);
+static void formt(int m, double * wt, double * sy,
+		  double * ss, int * col, double * theta, int * info);
+static void freev(int n, int * nfree, int * indx,
+		  int * nenter, int * ileave, int * indx2, int * iwhere, int * wrk, int * updatd,
+		  int * cnstnd, int iprint, int * iter);
+static void hpsolb(int n, double * t, int * iorder, int iheap);
+static void lnsrlb(int n, double * l, double * u,
+		   int * nbd, double * x, double * f, double * fold, double * gd,
+		   double * gdold, double * g, double * d, double * r,
+		   double * t, double * z, double * stp, double * dnorm,
+		   double * dtd, double * xstep, double * stpmx, int * iter, int * ifun,
+		   int * iback, int * nfgv, int * info, char * task, int * boxed, int * cnstnd,
+		   char * csave);
+static void mainlb(int n, int m, double * x,
+		   double * l, double * u, int * nbd, double * f, double * g,
+		   double factr, double * pgtol, double * ws, double * wy,
+		   double * sy, double * ss, double * wt, double * wn,
+		   double * snd, double * z, double * r, double * d,
+		   double * t, double * wa, int * indx, int * iwhere, int * indx2, char * task,
+		   int iprint, char * csave, int * isave);
+static void matupd(int n, int m, double * ws, double * wy, double * sy,
+		   double * ss, double * d, double * r, int * itail, int * iupdat,
+		   int * col, int * head, double * theta, double * rr, double * dr,
+		   double * stp, double * dtd);
+static void projgr(int n, double * l, double * u,
+		   int * nbd, double * x, double * g, double * sbgnrm);
+static void subsm(int n, int m, int * nsub, int * ind, double * l, double * u,
+		  int * nbd, double * x, double * d, double * ws, double * wy,
+		  double * theta, int * col, int * head, int * iword, double * wv,
+		  double * wn, int iprint, int * info);
 
 static void prn1lb(int n, int m, double *l, double *u, double *x,
 		   int iprint, double epsmch);

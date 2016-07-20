@@ -59,10 +59,10 @@ void formatRaw(Rbyte *, R_xlen_t, int *);
 void formatString(SEXP*, R_xlen_t, int*, int);
 
 /* Formating of values */
-const char *EncodeElement0(SEXP, int, int, const char *);
+const char *EncodeElement0(SEXP x, int indx, int quote, const char * dec);
 const char *EncodeEnvironment(SEXP);
 /* Legacy, for R.app */
-const char *EncodeElement(SEXP, int, int, char);
+const char *EncodeElement(SEXP x, int indx, int quote, char cdec);
 
 /* In Rinternals.h (and MUST be there):
    CustomPrintValue,  PrintValue, PrintValueRec */
@@ -70,7 +70,7 @@ void printArray(SEXP, SEXP, int, int, SEXP);
 void printMatrix(SEXP, int, SEXP, int, int, SEXP, SEXP,
 		 const char*, const char*);
 void printNamedVector(SEXP, SEXP, int, const char*);
-void printVector(SEXP, int, int);
+void printVector(SEXP x, int indx, int quote);
 // void PrintClosure(SEXP, Rboolean);
 // void PrintLanguage(SEXP, Rboolean);
 

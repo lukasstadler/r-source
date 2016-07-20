@@ -294,8 +294,8 @@ extern const char *locale2charset(const char *);
     ISWFUNC(alnum)
     */
 
-wctype_t Ri18n_wctype(const char *);
-int Ri18n_iswctype(wint_t, wctype_t);
+wctype_t Ri18n_wctype(const char * name);
+int Ri18n_iswctype(wint_t wc, wctype_t desc);
 
 static int Ri18n_iswalnum (wint_t wc)
 {

@@ -167,7 +167,7 @@ typedef struct {
 } InputCtxtData;
 
 
-static SEXP DataLoad(FILE*, int startup, InputRoutines *m, int version, SaveLoadData *d);
+static SEXP DataLoad(FILE* fp, int startup, InputRoutines *m, int version, SaveLoadData *d);
 
 
 /* ----- D u m m y -- P l a c e h o l d e r -- R o u t i n e s ----- */
@@ -768,8 +768,8 @@ static SEXP DataLoad(FILE *fp, int startup, InputRoutines *m,
 #endif /* NDEBUG */
 
 
-static void NewWriteItem (SEXP s, SEXP sym_list, SEXP env_list, FILE *fp, OutputRoutines *, SaveLoadData *);
-static SEXP NewReadItem (SEXP sym_table, SEXP env_table, FILE *fp, InputRoutines *, SaveLoadData *);
+static void NewWriteItem (SEXP s, SEXP sym_list, SEXP env_list, FILE *fp, OutputRoutines * m, SaveLoadData * d);
+static SEXP NewReadItem (SEXP sym_table, SEXP env_table, FILE *fp, InputRoutines * m, SaveLoadData * d);
 
 
 /*  We use special (negative) type codes to indicate the special

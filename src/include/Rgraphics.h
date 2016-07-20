@@ -217,7 +217,7 @@ void GArrow(double, double, double, double, int, double, double, int, pGEDevDesc
 void GBox(int, pGEDevDesc);
 /* Return a "nice" min, max and number of intervals for a given
  * range on a linear or _log_ scale, respectively: */
-void GPretty(double*, double*, int*); /* used in plot3d.c */
+void GPretty(double* lo, double* up, int* ndiv); /* used in plot3d.c */
 /* Draw text in margins. */
 void GMtext(const char *, cetype_t, int, double, int, double, int, double, pGEDevDesc);
 /* Draw one of the predefined symbols (circle, square, diamond, ...) */

@@ -62,19 +62,19 @@
 			   and occasionally as a limit. */
 
 #include <R_ext/Complex.h>
-void Rf_CoercionWarning(int);/* warning code */
-int Rf_LogicalFromInteger(int, int*);
-int Rf_LogicalFromReal(double, int*);
-int Rf_LogicalFromComplex(Rcomplex, int*);
-int Rf_IntegerFromLogical(int, int*);
-int Rf_IntegerFromReal(double, int*);
-int Rf_IntegerFromComplex(Rcomplex, int*);
-double Rf_RealFromLogical(int, int*);
-double Rf_RealFromInteger(int, int*);
-double Rf_RealFromComplex(Rcomplex, int*);
-Rcomplex Rf_ComplexFromLogical(int, int*);
-Rcomplex Rf_ComplexFromInteger(int, int*);
-Rcomplex Rf_ComplexFromReal(double, int*);
+void Rf_CoercionWarning(int warn);/* warning code */
+int Rf_LogicalFromInteger(int x, int* warn);
+int Rf_LogicalFromReal(double x, int* warn);
+int Rf_LogicalFromComplex(Rcomplex x, int* warn);
+int Rf_IntegerFromLogical(int x, int* warn);
+int Rf_IntegerFromReal(double x, int* warn);
+int Rf_IntegerFromComplex(Rcomplex x, int* warn);
+double Rf_RealFromLogical(int x, int* warn);
+double Rf_RealFromInteger(int x, int* warn);
+double Rf_RealFromComplex(Rcomplex x, int* warn);
+Rcomplex Rf_ComplexFromLogical(int x, int* warn);
+Rcomplex Rf_ComplexFromInteger(int x, int* warn);
+Rcomplex Rf_ComplexFromReal(double x, int* warn);
 
 #define CALLED_FROM_DEFN_H 1
 #include <Rinternals.h>		/*-> Arith.h, Boolean.h, Complex.h, Error.h,
@@ -773,7 +773,7 @@ extern0 IStackval *R_BCIntStackBase, *R_BCIntStackTop, *R_BCIntStackEnd;
 extern0 int R_jit_enabled INI_as(0);
 extern0 int R_compile_pkgs INI_as(0);
 extern0 int R_check_constants INI_as(0);
-extern SEXP R_cmpfun(SEXP);
+extern SEXP R_cmpfun(SEXP fun);
 extern void R_init_jit_enabled(void);
 extern void R_initAsignSymbols(void);
 
@@ -786,14 +786,14 @@ LibExtern int R_max_num_math_threads INI_as(1);
 /* Pointer  type and utilities for dispatch in the methods package */
 typedef SEXP (*R_stdGen_ptr_t)(SEXP, SEXP, SEXP); /* typedef */
 //R_stdGen_ptr_t R_get_standardGeneric_ptr(void); /* get method */
-R_stdGen_ptr_t R_set_standardGeneric_ptr(R_stdGen_ptr_t, SEXP); /* set method */
+R_stdGen_ptr_t R_set_standardGeneric_ptr(R_stdGen_ptr_t val, SEXP envir); /* set method */
 LibExtern SEXP R_MethodsNamespace;
 SEXP R_deferred_default_method(void);
 SEXP R_set_prim_method(SEXP fname, SEXP op, SEXP code_vec, SEXP fundef,
 		       SEXP mlist);
 SEXP do_set_prim_method(SEXP op, const char *code_string, SEXP fundef,
 			SEXP mlist);
-void R_set_quick_method_check(R_stdGen_ptr_t);
+void R_set_quick_method_check(R_stdGen_ptr_t value);
 SEXP R_primitive_methods(SEXP op);
 SEXP R_primitive_generic(SEXP op);
 
@@ -1000,17 +1000,17 @@ int	R_ShowFiles(int, const char **, const char **, const char *,
 int     R_EditFiles(int, const char **, const char **, const char *);
 int	R_ChooseFile(int, char *, int);
 char	*R_HomeDir(void);
-Rboolean R_FileExists(const char *);
-Rboolean R_HiddenFile(const char *);
-double	R_FileMtime(const char *);
+Rboolean R_FileExists(const char * path);
+Rboolean R_HiddenFile(const char * name);
+double	R_FileMtime(const char * path);
 
 /* environment cell access */
 typedef struct { SEXP cell; } R_varloc_t; /* use struct to prevent casting */
 #define R_VARLOC_IS_NULL(loc) ((loc).cell == NULL)
-R_varloc_t R_findVarLocInFrame(SEXP, SEXP);
+R_varloc_t R_findVarLocInFrame(SEXP rho, SEXP symbol);
 SEXP R_GetVarLocValue(R_varloc_t);
 SEXP R_GetVarLocSymbol(R_varloc_t);
-Rboolean R_GetVarLocMISSING(R_varloc_t);
+Rboolean R_GetVarLocMISSING(R_varloc_t vl);
 void R_SetVarLocValue(R_varloc_t, SEXP);
 
 /* deparse option bits: change do_dump if more are added */
@@ -1031,54 +1031,54 @@ void R_SetVarLocValue(R_varloc_t, SEXP);
 #define FORSOURCING		95 /* not DELAYPROMISES, used in edit.c */
 
 /* Coercion functions */
-int Rf_LogicalFromString(SEXP, int*);
-int Rf_IntegerFromString(SEXP, int*);
-double Rf_RealFromString(SEXP, int*);
-Rcomplex Rf_ComplexFromString(SEXP, int*);
-SEXP Rf_StringFromLogical(int, int*);
-SEXP Rf_StringFromInteger(int, int*);
-SEXP Rf_StringFromReal(double, int*);
-SEXP Rf_StringFromComplex(Rcomplex, int*);
-SEXP Rf_EnsureString(SEXP);
+int Rf_LogicalFromString(SEXP x, int* warn);
+int Rf_IntegerFromString(SEXP x, int* warn);
+double Rf_RealFromString(SEXP x, int* warn);
+Rcomplex Rf_ComplexFromString(SEXP x, int* warn);
+SEXP Rf_StringFromLogical(int x, int* warn);
+SEXP Rf_StringFromInteger(int x, int* warn);
+SEXP Rf_StringFromReal(double x, int* warn);
+SEXP Rf_StringFromComplex(Rcomplex x, int* warn);
+SEXP Rf_EnsureString(SEXP s);
 
 /* Other Internally Used Functions */
 
-SEXP Rf_allocCharsxp(R_len_t);
+SEXP Rf_allocCharsxp(R_len_t len);
 SEXP Rf_append(SEXP, SEXP); /* apparently unused now */
 R_xlen_t asVecSize(SEXP x);
-void check1arg(SEXP, SEXP, const char *);
-void Rf_checkArityCall(SEXP, SEXP, SEXP);
-void CheckFormals(SEXP);
+void check1arg(SEXP arg, SEXP call, const char * formal);
+void Rf_checkArityCall(SEXP op, SEXP args, SEXP call);
+void CheckFormals(SEXP ls);
 void R_check_locale(void);
 void check_stack_balance(SEXP op, int save);
 void CleanEd(void);
-void copyMostAttribNoTs(SEXP, SEXP);
+void copyMostAttribNoTs(SEXP inp, SEXP ans);
 SEXP createS3Vars(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-void CustomPrintValue(SEXP, SEXP);
+void CustomPrintValue(SEXP s, SEXP env);
 double currentTime(void);
 void DataFrameClass(SEXP);
 SEXP ddfindVar(SEXP, SEXP);
-SEXP deparse1(SEXP,Rboolean,int);
+SEXP deparse1(SEXP call,Rboolean abbrev,int opts);
 SEXP deparse1w(SEXP,Rboolean,int);
-SEXP deparse1line(SEXP,Rboolean);
+SEXP deparse1line(SEXP call,Rboolean abbrev);
 SEXP deparse1s(SEXP call);
 int DispatchAnyOrEval(SEXP, SEXP, const char *, SEXP, SEXP, SEXP*, int, int);
 int DispatchOrEval(SEXP, SEXP, const char *, SEXP, SEXP, SEXP*, int, int);
 int DispatchGroup(const char *, SEXP,SEXP,SEXP,SEXP,SEXP*);
-R_xlen_t dispatch_xlength(SEXP, SEXP, SEXP);
-R_len_t dispatch_length(SEXP, SEXP, SEXP);
-SEXP dispatch_subset2(SEXP, R_xlen_t, SEXP, SEXP);
-SEXP duplicated(SEXP, Rboolean);
-R_xlen_t any_duplicated(SEXP, Rboolean);
-R_xlen_t any_duplicated3(SEXP, SEXP, Rboolean);
-SEXP evalList(SEXP, SEXP, SEXP, int);
-SEXP evalListKeepMissing(SEXP, SEXP);
+R_xlen_t dispatch_xlength(SEXP x, SEXP call, SEXP rho);
+R_len_t dispatch_length(SEXP x, SEXP call, SEXP rho);
+SEXP dispatch_subset2(SEXP x, R_xlen_t i, SEXP call, SEXP rho);
+SEXP duplicated(SEXP x, Rboolean from_last);
+R_xlen_t any_duplicated(SEXP x, Rboolean from_last);
+R_xlen_t any_duplicated3(SEXP x, SEXP incomp, Rboolean from_last);
+SEXP evalList(SEXP el, SEXP rho, SEXP call, int n);
+SEXP evalListKeepMissing(SEXP el, SEXP rho);
 int factorsConform(SEXP, SEXP);
-void NORET findcontext(int, SEXP, SEXP);
-SEXP findVar1(SEXP, SEXP, SEXPTYPE, int);
+void NORET findcontext(int mask, SEXP env, SEXP val);
+SEXP findVar1(SEXP symbol, SEXP rho, SEXPTYPE mode, int Rf_inherits);
 void FrameClassFix(SEXP);
 SEXP frameSubscript(int, SEXP, SEXP);
-R_xlen_t get1index(SEXP, SEXP, R_xlen_t, int, int, SEXP);
+R_xlen_t get1index(SEXP s, SEXP names, R_xlen_t len, int pok, int pos, SEXP call);
 int GetOptionCutoff(void);
 SEXP getVar(SEXP, SEXP);
 SEXP getVarInFrame(SEXP, SEXP);
@@ -1092,13 +1092,13 @@ Rboolean R_current_trace_state(void);
 Rboolean R_current_debug_state(void);
 Rboolean R_has_methods(SEXP);
 void R_InitialData(void);
-SEXP R_possible_dispatch(SEXP, SEXP, SEXP, SEXP, Rboolean);
+SEXP R_possible_dispatch(SEXP call, SEXP op, SEXP args, SEXP rho, Rboolean promisedArgs);
 void InitGraphics(void);
 void InitMemory(void);
 void InitNames(void);
 void InitOptions(void);
 void InitStringHash(void);
-void Init_R_Variables(SEXP);
+void Init_R_Variables(SEXP rho);
 void InitTempDir(void);
 void InitTypeTables(void);
 void initStack(void);
@@ -1110,101 +1110,101 @@ void NORET jump_to_toplevel(void);
 void KillAllDevices(void);
 SEXP levelsgets(SEXP, SEXP);
 void mainloop(void);
-SEXP makeSubscript(SEXP, SEXP, R_xlen_t *, SEXP);
-SEXP markKnown(const char *, SEXP);
-SEXP mat2indsub(SEXP, SEXP, SEXP);
-SEXP matchArg(SEXP, SEXP*);
-SEXP matchArgExact(SEXP, SEXP*);
-SEXP matchArgs(SEXP, SEXP, SEXP);
-SEXP matchPar(const char *, SEXP*);
-void memtrace_report(void *, void *);
-SEXP mkCLOSXP(SEXP, SEXP, SEXP);
+SEXP makeSubscript(SEXP x, SEXP s, R_xlen_t * stretch, SEXP call);
+SEXP markKnown(const char * s, SEXP ref);
+SEXP mat2indsub(SEXP dims, SEXP s, SEXP call);
+SEXP matchArg(SEXP tag, SEXP* list);
+SEXP matchArgExact(SEXP tag, SEXP* list);
+SEXP matchArgs(SEXP formals, SEXP supplied, SEXP call);
+SEXP matchPar(const char * tag, SEXP* list);
+void memtrace_report(void * old, void * _new);
+SEXP mkCLOSXP(SEXP formals, SEXP body, SEXP rho);
 SEXP mkFalse(void);
-SEXP mkPRIMSXP (int, int);
-SEXP mkPROMISE(SEXP, SEXP);
-SEXP R_mkEVPROMISE(SEXP, SEXP);
-SEXP R_mkEVPROMISE_NR(SEXP, SEXP);
+SEXP mkPRIMSXP (int offset, int eval);
+SEXP mkPROMISE(SEXP expr, SEXP rho);
+SEXP R_mkEVPROMISE(SEXP expr, SEXP val);
+SEXP R_mkEVPROMISE_NR(SEXP expr, SEXP val);
 SEXP mkQUOTE(SEXP);
-SEXP mkSYMSXP(SEXP, SEXP);
+SEXP mkSYMSXP(SEXP name, SEXP value);
 SEXP mkTrue(void);
-SEXP NewEnvironment(SEXP, SEXP, SEXP);
+SEXP NewEnvironment(SEXP namelist, SEXP valuelist, SEXP rho);
 void onintr(void);
 void onintrNoResume(void);
 RETSIGTYPE onsigusr1(int);
 RETSIGTYPE onsigusr2(int);
-R_xlen_t OneIndex(SEXP, SEXP, R_xlen_t, int, SEXP*, int, SEXP);
+R_xlen_t OneIndex(SEXP x, SEXP s, R_xlen_t len, int partial, SEXP* newname, int pos, SEXP call);
 SEXP parse(FILE*, int);
-SEXP patchArgsByActuals(SEXP, SEXP, SEXP);
+SEXP patchArgsByActuals(SEXP formals, SEXP supplied, SEXP cloenv);
 void PrintDefaults(void);
 void PrintGreeting(void);
-void PrintValueEnv(SEXP, SEXP);
-void PrintValueRec(SEXP, SEXP);
-void PrintVersion(char *, size_t len);
-void PrintVersion_part_1(char *, size_t len);
-void PrintVersionString(char *, size_t len);
+void PrintValueEnv(SEXP s, SEXP env);
+void PrintValueRec(SEXP s, SEXP env);
+void PrintVersion(char * s, size_t len);
+void PrintVersion_part_1(char * s, size_t len);
+void PrintVersionString(char * s, size_t len);
 void PrintWarnings(void);
 void process_site_Renviron(void);
 void process_system_Renviron(void);
 void process_user_Renviron(void);
-SEXP promiseArgs(SEXP, SEXP);
+SEXP promiseArgs(SEXP el, SEXP rho);
 void Rcons_vprintf(const char *, va_list);
-SEXP R_data_class(SEXP , Rboolean);
-SEXP R_data_class2(SEXP);
+SEXP R_data_class(SEXP  obj, Rboolean singleString);
+SEXP R_data_class2(SEXP obj);
 char *R_LibraryFileName(const char *, char *, size_t);
-SEXP R_LoadFromFile(FILE*, int);
-SEXP R_NewHashedEnv(SEXP, SEXP);
-extern int R_Newhashpjw(const char *);
+SEXP R_LoadFromFile(FILE* fp, int startup);
+SEXP R_NewHashedEnv(SEXP enclos, SEXP size);
+extern int R_Newhashpjw(const char * s);
 FILE* R_OpenLibraryFile(const char *);
-SEXP R_Primitive(const char *);
+SEXP R_Primitive(const char * primname);
 void R_RestoreGlobalEnv(void);
-void R_RestoreGlobalEnvFromFile(const char *, Rboolean);
+void R_RestoreGlobalEnvFromFile(const char * name, Rboolean quiet);
 void R_SaveGlobalEnv(void);
-void R_SaveGlobalEnvToFile(const char *);
-void R_SaveToFile(SEXP, FILE*, int);
-void R_SaveToFileV(SEXP, FILE*, int, int);
+void R_SaveGlobalEnvToFile(const char * name);
+void R_SaveToFile(SEXP obj, FILE* fp, int ascii);
+void R_SaveToFileV(SEXP obj, FILE* fp, int ascii, int version);
 Rboolean R_seemsOldStyleS4Object(SEXP object);
-int R_SetOptionWarn(int);
-int R_SetOptionWidth(int);
+int R_SetOptionWarn(int w);
+int R_SetOptionWidth(int w);
 void R_Suicide(const char *);
 void R_getProcTime(double *data);
 int R_isMissing(SEXP symbol, SEXP rho);
 const char *sexptype2char(SEXPTYPE type);
-void sortVector(SEXP, Rboolean);
+void sortVector(SEXP s, Rboolean decreasing);
 void SrcrefPrompt(const char *, SEXP);
-void ssort(SEXP*,int);
+void ssort(SEXP* x,int n);
 int StrToInternal(const char *);
-SEXP strmat2intmat(SEXP, SEXP, SEXP);
-SEXP substituteList(SEXP, SEXP);
+SEXP strmat2intmat(SEXP s, SEXP dnamelist, SEXP call);
+SEXP substituteList(SEXP el, SEXP rho);
 unsigned int TimeToSeed(void);
 Rboolean tsConform(SEXP,SEXP);
 SEXP tspgets(SEXP, SEXP);
 SEXP type2symbol(SEXPTYPE);
-void unbindVar(SEXP, SEXP);
+void unbindVar(SEXP symbol, SEXP rho);
 #ifdef ALLOW_OLD_SAVE
 void unmarkPhase(void);
 #endif
 SEXP R_LookupMethod(SEXP, SEXP, SEXP, SEXP);
 int usemethod(const char *, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP*);
-SEXP vectorIndex(SEXP, SEXP, int, int, int, SEXP, Rboolean);
+SEXP vectorIndex(SEXP x, SEXP thesub, int start, int stop, int pok, SEXP call, Rboolean dup);
 
 #ifdef R_USE_SIGNALS
-void begincontext(RCNTXT*, int, SEXP, SEXP, SEXP, SEXP, SEXP);
+void begincontext(RCNTXT* cptr, int flags, SEXP syscall, SEXP env, SEXP sysp, SEXP promargs, SEXP callfun);
 SEXP dynamicfindVar(SEXP, RCNTXT*);
-void endcontext(RCNTXT*);
-int framedepth(RCNTXT*);
-void R_InsertRestartHandlers(RCNTXT *, const char *);
-void NORET R_JumpToContext(RCNTXT *, int, SEXP);
-SEXP R_syscall(int,RCNTXT*);
-int R_sysparent(int,RCNTXT*);
-SEXP R_sysframe(int,RCNTXT*);
-SEXP R_sysfunction(int,RCNTXT*);
+void endcontext(RCNTXT* cptr);
+int framedepth(RCNTXT* cptr);
+void R_InsertRestartHandlers(RCNTXT * cptr, const char * cname);
+void NORET R_JumpToContext(RCNTXT * target, int mask, SEXP val);
+SEXP R_syscall(int n,RCNTXT* cptr);
+int R_sysparent(int n,RCNTXT* cptr);
+SEXP R_sysframe(int n,RCNTXT* cptr);
+SEXP R_sysfunction(int n,RCNTXT* cptr);
 
-void R_run_onexits(RCNTXT *);
-void NORET R_jumpctxt(RCNTXT *, int, SEXP);
+void R_run_onexits(RCNTXT * cptr);
+void NORET R_jumpctxt(RCNTXT * targetcptr, int mask, SEXP val);
 #endif
 
 /* ../main/bind.c */
-SEXP ItemName(SEXP, R_xlen_t);
+SEXP ItemName(SEXP names, R_xlen_t i);
 
 /* ../main/errors.c : */
 void NORET ErrorMessage(SEXP, int, ...);
@@ -1212,11 +1212,11 @@ void WarningMessage(SEXP, R_WARNING, ...);
 SEXP R_GetTraceback(int);
 
 R_size_t R_GetMaxVSize(void);
-void R_SetMaxVSize(R_size_t);
+void R_SetMaxVSize(R_size_t size);
 R_size_t R_GetMaxNSize(void);
-void R_SetMaxNSize(R_size_t);
+void R_SetMaxNSize(R_size_t size);
 R_size_t R_Decode2Long(char *p, int *ierr);
-void R_SetPPSize(R_size_t);
+void R_SetPPSize(R_size_t size);
 
 /* ../main/devices.c, used in memory.c, gnuwin32/extra.c */
 #define R_MaxDevices 64
@@ -1233,7 +1233,7 @@ int	Rstrlen(SEXP, int);
 const char *EncodeRaw(Rbyte, const char *);
 const char *EncodeString(SEXP, int, int, Rprt_adj);
 const char *EncodeReal2(double, int, int, int);
-const char *EncodeChar(SEXP);
+const char *EncodeChar(SEXP x);
 
 
 /* main/sort.c */
@@ -1241,10 +1241,10 @@ void orderVector1(int *indx, int n, SEXP key, Rboolean nalast,
 		  Rboolean decreasing, SEXP rho);
 
 /* main/subset.c */
-SEXP R_subset3_dflt(SEXP, SEXP, SEXP);
+SEXP R_subset3_dflt(SEXP x, SEXP input, SEXP call);
 
 /* main/subassign.c */
-SEXP R_subassign3_dflt(SEXP, SEXP, SEXP, SEXP);
+SEXP R_subassign3_dflt(SEXP call, SEXP x, SEXP nlist, SEXP val);
 
 #include <wchar.h>
 
@@ -1269,7 +1269,7 @@ size_t ucstoutf8(char *s, const unsigned int wc);
 size_t mbtoucs(unsigned int *wc, const char *s, size_t n);
 size_t wcstoutf8(char *s, const wchar_t *wc, size_t n);
 
-SEXP Rf_installTrChar(SEXP);
+SEXP Rf_installTrChar(SEXP x);
 
 const wchar_t *wtransChar(SEXP x); /* from sysutils.c */
 
@@ -1286,10 +1286,10 @@ void resetICUcollator(void); /* from util.c */
 void dt_invalidate_locale(); /* from Rstrptime.h */
 int R_OutputCon; /* from connections.c */
 extern int R_InitReadItemDepth, R_ReadItemDepth; /* from serialize.c */
-void get_current_mem(size_t *,size_t *,size_t *); /* from memory.c */
+void get_current_mem(size_t * smallvsize,size_t * largevsize,size_t * nodes); /* from memory.c */
 unsigned long get_duplicate_counter(void);  /* from duplicate.c */
 void reset_duplicate_counter(void);  /* from duplicate.c */
-void BindDomain(char *); /* from main.c */
+void BindDomain(char * R_Home); /* from main.c */
 extern Rboolean LoadInitFile;  /* from startup.c */
 
 // Unix and Windows versions

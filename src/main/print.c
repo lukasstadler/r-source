@@ -71,9 +71,9 @@
 /* Global print parameter struct: */
 R_print_par_t R_print;
 
-static void printAttributes(SEXP, SEXP, Rboolean);
-static void PrintSpecial(SEXP);
-static void PrintLanguageEtc(SEXP, Rboolean, Rboolean);
+static void printAttributes(SEXP s, SEXP env, Rboolean useSlots);
+static void PrintSpecial(SEXP s);
+static void PrintLanguageEtc(SEXP s, Rboolean useSource, Rboolean isClosure);
 
 
 #define TAGBUFLEN 256
