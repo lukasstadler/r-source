@@ -887,18 +887,18 @@ SEXP attribute_hidden do_polyroot(SEXP call, SEXP op, SEXP args, SEXP rho)
 
 #include <Rmath.h> /* for R_pow_di */
 
-static void calct(Rboolean *);
-static Rboolean fxshft(int, double *, double *);
-static Rboolean vrshft(int, double *, double *);
-static void nexth(Rboolean);
-static void noshft(int);
+static void calct(Rboolean * bool);
+static Rboolean fxshft(int l2, double * zr, double * zi);
+static Rboolean vrshft(int l3, double * zr, double * zi);
+static void nexth(Rboolean bool);
+static void noshft(int l1);
 
-static void polyev(int, double, double,
-		   double *, double *, double *, double *, double *, double *);
-static double errev(int, double *, double *, double, double, double, double);
-static double cpoly_cauchy(int, double *, double *);
-static double cpoly_scale(int, double *, double, double, double, double);
-static void cdivid(double, double, double, double, double *, double *);
+static void polyev(int n, double s_r, double s_i,
+		   double * p_r, double * p_i, double * q_r, double * q_i, double * v_r, double * v_i);
+static double errev(int n, double * qr, double * qi, double ms, double mp, double a_re, double m_re);
+static double cpoly_cauchy(int n, double * pot, double * q);
+static double cpoly_scale(int n, double * pot, double eps, double BIG, double small, double base);
+static void cdivid(double ar, double ai, double br, double bi, double * cr, double * ci);
 
 /* Global Variables (too many!) */
 

@@ -28,7 +28,7 @@
 
 #include <tre/tre.h>
 
-static SEXP allocMatrixNA(SEXPTYPE, int, int);
+static SEXP allocMatrixNA(SEXPTYPE mode, int nrow, int ncol);
 static void transferVector(SEXP s, SEXP t);
 
 static void con_cleanup(void *data)
@@ -37,7 +37,7 @@ static void con_cleanup(void *data)
     if(con->isopen) con->close(con);
 }
 
-static Rboolean field_is_foldable_p(const char *, SEXP);
+static Rboolean field_is_foldable_p(const char * field, SEXP excludes);
 
 /* Use R_alloc as this might get interrupted */
 static char *Rconn_getline2(Rconnection con, char *buf, int bufsize)

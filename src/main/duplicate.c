@@ -107,7 +107,7 @@
    is not defined, because we still need to be able to
    optionally rename duplicate() as Rf_duplicate().
 */
-static SEXP duplicate1(SEXP, Rboolean deep);
+static SEXP duplicate1(SEXP s, Rboolean deep);
 
 #ifdef R_PROFILING
 static unsigned long duplicate_counter = (unsigned long)-1;

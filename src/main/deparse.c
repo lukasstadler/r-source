@@ -134,17 +134,17 @@ typedef struct {
 
 static SEXP deparse1WithCutoff(SEXP call, Rboolean abbrev, int cutoff,
 			       Rboolean backtick, int opts, int nlines);
-static void args2buff(SEXP, int, int, LocalParseData *);
-static void deparse2buff(SEXP, LocalParseData *);
-static void print2buff(const char *, LocalParseData *);
-static void printtab2buff(int, LocalParseData *);
-static void writeline(LocalParseData *);
-static void vector2buff(SEXP, LocalParseData *);
-static void src2buff1(SEXP, LocalParseData *);
-static Rboolean src2buff(SEXP, int, LocalParseData *);
-static void vec2buff(SEXP, LocalParseData *);
-static void linebreak(Rboolean *lbreak, LocalParseData *);
-static void deparse2(SEXP, SEXP, LocalParseData *);
+static void args2buff(SEXP arglist, int lineb, int formals, LocalParseData * d);
+static void deparse2buff(SEXP s, LocalParseData * d);
+static void print2buff(const char * strng, LocalParseData * d);
+static void printtab2buff(int ntab, LocalParseData * d);
+static void writeline(LocalParseData * d);
+static void vector2buff(SEXP vector, LocalParseData * d);
+static void src2buff1(SEXP srcref, LocalParseData * d);
+static Rboolean src2buff(SEXP sv, int k, LocalParseData * d);
+static void vec2buff(SEXP v, LocalParseData * d);
+static void linebreak(Rboolean *lbreak, LocalParseData * d);
+static void deparse2(SEXP what, SEXP svec, LocalParseData * d);
 
 SEXP attribute_hidden do_deparse(SEXP call, SEXP op, SEXP args, SEXP rho)
 {

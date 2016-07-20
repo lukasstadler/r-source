@@ -70,7 +70,7 @@ void attribute_hidden nl_Rdummy(void)
 void Rf_callToplevelHandlers(SEXP expr, SEXP value, Rboolean succeeded,
 			     Rboolean visible);
 
-static int ParseBrowser(SEXP, SEXP);
+static int ParseBrowser(SEXP CExpr, SEXP rho);
 
 
 	/* Read-Eval-Print Loop [ =: REPL = repl ] with input from a file */

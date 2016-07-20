@@ -30,8 +30,8 @@
 // #define NINTERRUPT 10000000
 
 
-static SEXP lunary(SEXP, SEXP, SEXP);
-static SEXP lbinary(SEXP, SEXP, SEXP);
+static SEXP lunary(SEXP call, SEXP op, SEXP arg);
+static SEXP lbinary(SEXP call, SEXP op, SEXP args);
 static SEXP binaryLogic(int code, SEXP s1, SEXP s2);
 static SEXP binaryLogic2(int code, SEXP s1, SEXP s2);
 

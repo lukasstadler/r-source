@@ -38,8 +38,8 @@ static R_StringBuffer cbuff = {NULL, 0, MAXELTSIZE};
 
 #define LIST_ASSIGN(x) {SET_VECTOR_ELT(data->ans_ptr, data->ans_length, x); data->ans_length++;}
 
-static SEXP cbind(SEXP, SEXP, SEXPTYPE, SEXP, int);
-static SEXP rbind(SEXP, SEXP, SEXPTYPE, SEXP, int);
+static SEXP cbind(SEXP call, SEXP args, SEXPTYPE mode, SEXP rho, int deparse_level);
+static SEXP rbind(SEXP call, SEXP args, SEXPTYPE mode, SEXP rho, int deparse_level);
 
 /* The following code establishes the return type for the */
 /* functions  unlist, c, cbind, and rbind and also determines */

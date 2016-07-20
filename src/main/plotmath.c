@@ -892,11 +892,11 @@ static BBOX GlyphBBox(int chr, pGEcontext gc, pGEDevDesc dd)
     return bbox;
 }
 
-static BBOX RenderElement(SEXP, int, mathContext*, pGEcontext , pGEDevDesc);
-static BBOX RenderOffsetElement(SEXP, double, double, int,
-				mathContext*, pGEcontext , pGEDevDesc);
-static BBOX RenderExpression(SEXP, int, mathContext*, pGEcontext , pGEDevDesc);
-static BBOX RenderSymbolChar(int, int, mathContext*, pGEcontext , pGEDevDesc);
+static BBOX RenderElement(SEXP expr, int draw, mathContext* mc, pGEcontext  gc, pGEDevDesc dd);
+static BBOX RenderOffsetElement(SEXP expr, double x, double y, int draw,
+				mathContext* mc, pGEcontext  gc, pGEDevDesc dd);
+static BBOX RenderExpression(SEXP expr, int draw, mathContext* mc, pGEcontext  gc, pGEDevDesc dd);
+static BBOX RenderSymbolChar(int ascii, int draw, mathContext* mc, pGEcontext  gc, pGEDevDesc dd);
 
 
 /*  Code to Generate Bounding Boxes and Draw Formulae.	*/

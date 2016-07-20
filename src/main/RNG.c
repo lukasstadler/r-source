@@ -89,8 +89,8 @@ RNGTAB RNG_Table[] =
 static void Randomize(RNGtype kind);
 static double MT_genrand(void);
 static Int32 KT_next(void);
-static void RNG_Init_R_KT(Int32);
-static void RNG_Init_KT2(Int32);
+static void RNG_Init_R_KT(Int32 seed);
+static void RNG_Init_KT2(Int32 seed);
 #define KT_pos (RNG_Table[KNUTH_TAOCP].i_seed[100])
 
 static double fixup(double x)

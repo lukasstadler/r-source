@@ -26,11 +26,11 @@
 #include <Internal.h>
 #include <Rmath.h>
 
-static SEXP installAttrib(SEXP, SEXP, SEXP);
-static SEXP removeAttrib(SEXP, SEXP);
+static SEXP installAttrib(SEXP vec, SEXP name, SEXP val);
+static SEXP removeAttrib(SEXP vec, SEXP name);
 
 SEXP comment(SEXP);
-static SEXP commentgets(SEXP, SEXP);
+static SEXP commentgets(SEXP vec, SEXP comment);
 
 static SEXP row_names_gets(SEXP vec , SEXP val)
 {

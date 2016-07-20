@@ -40,26 +40,26 @@
 /* f2c-ed translations + modifications of QUADPACK functions */
 
 static void rdqagie(integr_fn f, void *ex,
-		    double *, int *, double * , double *, int *,
-		    double *, double *, int *,
-		    int *, double *, double *, double *, double *,
-		    int *, int *);
+		    double * bound, int * inf, double *  epsabs, double * epsrel, int * limit,
+		    double * result, double * abserr, int * neval,
+		    int * ier, double * alist, double * blist, double * rlist, double * elist,
+		    int * iord, int * last);
 
 static void rdqk15i(integr_fn f, void *ex,
-		    double *, int *, double * , double *,
-		    double *, double *, double *, double *);
+		    double * boun, int * inf, double *  a, double * b,
+		    double * result, double * abserr, double * resabs, double * resasc);
 
-static void rdqagse(integr_fn f, void *ex, double *, double *,
-		    double *, double *, int *, double *, double *,
-		    int *, int *, double *, double *, double *,
-		    double *, int *, int *);
+static void rdqagse(integr_fn f, void *ex, double * a, double * b,
+		    double * epsabs, double * epsrel, int * limit, double * result, double * abserr,
+		    int * neval, int * ier, double * alist, double * blist, double * rlist,
+		    double * elist, int * iord, int * last);
 
 static void rdqk21(integr_fn f, void *ex,
-		   double *, double *, double *, double *, double *, double *);
+		   double * a, double * b, double * result, double * abserr, double * resabs, double * resasc);
 
-static void rdqpsrt(int *, int *, int *, double *, double *, int *, int *);
+static void rdqpsrt(int * limit, int * last, int * maxerr, double * ermax, double * elist, int * iord, int * nrmax);
 
-static void rdqelg(int *, double *, double *, double *, double *, int *);
+static void rdqelg(int * n, double * epstab, double * result, double * abserr, double * res3la, int * nres);
 
 /* Table of constant values */
 

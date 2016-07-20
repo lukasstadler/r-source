@@ -66,7 +66,7 @@
  * Unicode 'East Asian Ambiguous' class.
  *
  */
-extern int Ri18n_wcwidth(wchar_t);
+extern int Ri18n_wcwidth(wchar_t c);
 extern int Ri18n_wcswidth (const wchar_t *, size_t);
 
 /* macOS CJK and WindowXP(Japanese)
@@ -78,8 +78,8 @@ extern int Ri18n_wcswidth (const wchar_t *, size_t);
  * We define alternatives to be used if
  * defined(Win32) || defined(__APPLE__) || defined(_AIX)
  */
-extern wctype_t Ri18n_wctype(const char *);
-extern int      Ri18n_iswctype(wint_t, wctype_t);
+extern wctype_t Ri18n_wctype(const char * name);
+extern int      Ri18n_iswctype(wint_t wc, wctype_t desc);
 
 #ifndef IN_RLOCALE_C
 /* We want to avoid these redefinitions in rlocale.c itself */

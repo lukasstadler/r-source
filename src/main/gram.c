@@ -111,9 +111,9 @@ static int identifier ;
 static void incrementId(void);
 static void initData(void);
 static void initId(void);
-static void record_( int, int, int, int, int, int, char* ) ;
+static void record_( int first_parsed, int first_column, int last_parsed, int last_column, int token, int id, char*  text_in) ;
 
-static void yyerror(const char *);
+static void yyerror(const char * s);
 static int yylex();
 int yyparse(void);
 
@@ -150,7 +150,7 @@ typedef struct yyltype
 
 static void finalizeData( ) ;
 static void growData( ) ;
-static void growID( int ) ;
+static void growID( int  target) ;
 
 #define DATA_ROWS 8
 
@@ -166,8 +166,8 @@ static void growID( int ) ;
 #define ID_ID( i )      INTEGER(ParseState.ids)[ 2*(i) ]
 #define ID_PARENT( i )  INTEGER(ParseState.ids)[ 2*(i) + 1 ]
 
-static void modif_token( yyltype*, int ) ;
-static void recordParents( int, yyltype*, int) ;
+static void modif_token( yyltype* loc, int  tok) ;
+static void recordParents( int parent, yyltype* childs, int nchilds) ;
 
 static int _current_token ;
 
@@ -229,22 +229,22 @@ static void setId( SEXP expr, yyltype loc){
 
 /* Functions used in the parsing process */
 
-static void	CheckFormalArgs(SEXP, SEXP, YYLTYPE *);
-static SEXP	FirstArg(SEXP, SEXP);
-static SEXP	GrowList(SEXP, SEXP);
+static void	CheckFormalArgs(SEXP formlist, SEXP _new, YYLTYPE * lloc);
+static SEXP	FirstArg(SEXP s, SEXP tag);
+static SEXP	GrowList(SEXP l, SEXP s);
 static void	IfPush(void);
-static int	KeywordLookup(const char *);
+static int	KeywordLookup(const char * s);
 static SEXP	NewList(void);
-static SEXP	NextArg(SEXP, SEXP, SEXP);
-static SEXP	TagArg(SEXP, SEXP, YYLTYPE *);
+static SEXP	NextArg(SEXP l, SEXP s, SEXP tag);
+static SEXP	TagArg(SEXP arg, SEXP tag, YYLTYPE * lloc);
 static int 	processLineDirective();
 
 /* These routines allocate constants */
 
-static SEXP	mkComplex(const char *);
+static SEXP	mkComplex(const char * s);
 SEXP		mkFalse(void);
-static SEXP     mkFloat(const char *);
-static SEXP 	mkInt(const char *); 
+static SEXP     mkFloat(const char * s);
+static SEXP 	mkInt(const char * s); 
 static SEXP	mkNA(void);
 SEXP		mkTrue(void);
 
@@ -254,7 +254,7 @@ static int	EatLines = 0;
 static int	GenerateCode = 0;
 static int	EndOfFile = 0;
 static int	xxgetc();
-static int	xxungetc(int);
+static int	xxungetc(int c);
 static int	xxcharcount, xxcharsave;
 static int	xxlinesave, xxbytesave, xxcolsave, xxparsesave;
 
@@ -316,38 +316,38 @@ static int colon ;
 /* Routines used to build the parse tree */
 
 static SEXP	xxnullformal(void);
-static SEXP	xxfirstformal0(SEXP);
-static SEXP	xxfirstformal1(SEXP, SEXP);
-static SEXP	xxaddformal0(SEXP, SEXP, YYLTYPE *);
-static SEXP	xxaddformal1(SEXP, SEXP, SEXP, YYLTYPE *);
+static SEXP	xxfirstformal0(SEXP sym);
+static SEXP	xxfirstformal1(SEXP sym, SEXP expr);
+static SEXP	xxaddformal0(SEXP formlist, SEXP sym, YYLTYPE * lloc);
+static SEXP	xxaddformal1(SEXP formlist, SEXP sym, SEXP expr, YYLTYPE * lloc);
 static SEXP	xxexprlist0();
-static SEXP	xxexprlist1(SEXP, YYLTYPE *);
-static SEXP	xxexprlist2(SEXP, SEXP, YYLTYPE *);
+static SEXP	xxexprlist1(SEXP expr, YYLTYPE * lloc);
+static SEXP	xxexprlist2(SEXP exprlist, SEXP expr, YYLTYPE * lloc);
 static SEXP	xxsub0(void);
-static SEXP	xxsub1(SEXP, YYLTYPE *);
-static SEXP	xxsymsub0(SEXP, YYLTYPE *);
-static SEXP	xxsymsub1(SEXP, SEXP, YYLTYPE *);
-static SEXP	xxnullsub0(YYLTYPE *);
-static SEXP	xxnullsub1(SEXP, YYLTYPE *);
-static SEXP	xxsublist1(SEXP);
-static SEXP	xxsublist2(SEXP, SEXP);
-static SEXP	xxcond(SEXP);
-static SEXP	xxifcond(SEXP);
-static SEXP	xxif(SEXP, SEXP, SEXP);
-static SEXP	xxifelse(SEXP, SEXP, SEXP, SEXP);
-static SEXP	xxforcond(SEXP, SEXP);
-static SEXP	xxfor(SEXP, SEXP, SEXP);
-static SEXP	xxwhile(SEXP, SEXP, SEXP);
-static SEXP	xxrepeat(SEXP, SEXP);
-static SEXP	xxnxtbrk(SEXP);
-static SEXP	xxfuncall(SEXP, SEXP);
-static SEXP	xxdefun(SEXP, SEXP, SEXP, YYLTYPE *);
-static SEXP	xxunary(SEXP, SEXP);
-static SEXP	xxbinary(SEXP, SEXP, SEXP);
-static SEXP	xxparen(SEXP, SEXP);
-static SEXP	xxsubscript(SEXP, SEXP, SEXP);
-static SEXP	xxexprlist(SEXP, YYLTYPE *, SEXP);
-static int	xxvalue(SEXP, int, YYLTYPE *);
+static SEXP	xxsub1(SEXP expr, YYLTYPE * lloc);
+static SEXP	xxsymsub0(SEXP sym, YYLTYPE * lloc);
+static SEXP	xxsymsub1(SEXP sym, SEXP expr, YYLTYPE * lloc);
+static SEXP	xxnullsub0(YYLTYPE * lloc);
+static SEXP	xxnullsub1(SEXP expr, YYLTYPE * lloc);
+static SEXP	xxsublist1(SEXP sub);
+static SEXP	xxsublist2(SEXP sublist, SEXP sub);
+static SEXP	xxcond(SEXP expr);
+static SEXP	xxifcond(SEXP expr);
+static SEXP	xxif(SEXP ifsym, SEXP cond, SEXP expr);
+static SEXP	xxifelse(SEXP ifsym, SEXP cond, SEXP ifexpr, SEXP elseexpr);
+static SEXP	xxforcond(SEXP sym, SEXP expr);
+static SEXP	xxfor(SEXP forsym, SEXP forcond, SEXP body);
+static SEXP	xxwhile(SEXP whilesym, SEXP cond, SEXP body);
+static SEXP	xxrepeat(SEXP repeatsym, SEXP body);
+static SEXP	xxnxtbrk(SEXP keyword);
+static SEXP	xxfuncall(SEXP expr, SEXP args);
+static SEXP	xxdefun(SEXP fname, SEXP formals, SEXP body, YYLTYPE * lloc);
+static SEXP	xxunary(SEXP op, SEXP arg);
+static SEXP	xxbinary(SEXP n1, SEXP n2, SEXP n3);
+static SEXP	xxparen(SEXP n1, SEXP n2);
+static SEXP	xxsubscript(SEXP a1, SEXP a2, SEXP a3);
+static SEXP	xxexprlist(SEXP a1, YYLTYPE * lloc, SEXP a2);
+static int	xxvalue(SEXP v, int k, YYLTYPE * lloc);
 
 #define YYSTYPE		SEXP
 

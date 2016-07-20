@@ -35,7 +35,7 @@
 
 #define ARGUSED(x) LEVELS(x)
 
-static SEXP bcEval(SEXP, SEXP, Rboolean);
+static SEXP bcEval(SEXP body, SEXP rho, Rboolean useCache);
 
 /* BC_PROILFING needs to be enabled at build time. It is not enabled
    by default as enabling it disabled the more efficient threaded code
@@ -936,7 +936,7 @@ SEXP attribute_hidden do_compilepkgs(SEXP call, SEXP op, SEXP args, SEXP rho)
 }
 
 /* forward declaration */
-static SEXP bytecodeExpr(SEXP);
+static SEXP bytecodeExpr(SEXP e);
 
 /* this function gets the srcref attribute from a statement block,
    and confirms it's in the expected format */

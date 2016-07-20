@@ -17,19 +17,19 @@
  *  https://www.R-project.org/Licenses/
  */
 
-SEXP do_math1(SEXP, SEXP, SEXP, SEXP);
-SEXP do_math2(SEXP, SEXP, SEXP, SEXP);
-SEXP do_math3(SEXP, SEXP, SEXP, SEXP);
-SEXP do_math4(SEXP, SEXP, SEXP, SEXP);
+SEXP do_math1(SEXP call, SEXP op, SEXP args, SEXP env);
+SEXP do_math2(SEXP call, SEXP op, SEXP args, SEXP env);
+SEXP do_math3(SEXP call, SEXP op, SEXP args, SEXP env);
+SEXP do_math4(SEXP call, SEXP op, SEXP args, SEXP env);
 #ifdef WHEN_MATH5_IS_THERE
  SEXP do_math5(SEXP, SEXP, SEXP, SEXP);
 #endif
-SEXP do_cmathfuns(SEXP, SEXP, SEXP, SEXP);
+SEXP do_cmathfuns(SEXP call, SEXP op, SEXP args, SEXP env);
 
-SEXP complex_math1(SEXP, SEXP, SEXP, SEXP);
-SEXP complex_math2(SEXP, SEXP, SEXP, SEXP);
-SEXP complex_unary(ARITHOP_TYPE, SEXP, SEXP);
-SEXP complex_binary(ARITHOP_TYPE, SEXP, SEXP);
+SEXP complex_math1(SEXP call, SEXP op, SEXP args, SEXP env);
+SEXP complex_math2(SEXP call, SEXP op, SEXP args, SEXP env);
+SEXP complex_unary(ARITHOP_TYPE code, SEXP s1, SEXP call);
+SEXP complex_binary(ARITHOP_TYPE code, SEXP s1, SEXP s2);
 
 double R_pow(double x, double y);
 static R_INLINE double R_POW(double x, double y) /* handle x ^ 2 inline */

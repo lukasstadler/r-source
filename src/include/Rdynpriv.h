@@ -201,6 +201,6 @@ DL_FUNC R_dlsym(DllInfo *info, char const *name,
 SEXP R_MakeExternalPtrFn(DL_FUNC p, SEXP tag, SEXP prot);
 DL_FUNC R_ExternalPtrAddrFn(SEXP s);
 DL_FUNC R_dotCallFn(SEXP, SEXP, int);
-SEXP R_doDotCall(DL_FUNC, int, SEXP *, SEXP);
+SEXP R_doDotCall(DL_FUNC ofun, int nargs, SEXP * cargs, SEXP call);
 
 #endif /* ifdef R_DYNPRIV_H */

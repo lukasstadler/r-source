@@ -52,7 +52,7 @@ static int noBreakWarning = 0;
 static void try_jump_to_restart(void);
 // The next is crucial to the use of NORET attributes.
 static void NORET
-jump_to_top_ex(Rboolean, Rboolean, Rboolean, Rboolean, Rboolean);
+jump_to_top_ex(Rboolean traceback, Rboolean tryUserHandler, Rboolean processWarnings, Rboolean resetConsole, Rboolean ignoreRestartContexts);
 static void signalInterrupt(void);
 static char * R_ConciseTraceback(SEXP call, int skip);
 
@@ -299,7 +299,7 @@ void warning(const char *format, ...)
 
 static void vsignalError(SEXP call, const char *format, va_list ap);
 static void vsignalWarning(SEXP call, const char *format, va_list ap);
-static void NORET invokeRestart(SEXP, SEXP);
+static void NORET invokeRestart(SEXP r, SEXP arglist);
 
 static void reset_inWarning(void *data)
 {
